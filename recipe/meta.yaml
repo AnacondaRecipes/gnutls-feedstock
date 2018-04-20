@@ -22,28 +22,22 @@ source:
     #even though it was not built. I added a test on ENABLE_OPENSSL.
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win]
 
 requirements:
   build:
-    - gmp 6.1.*
-    - nettle 3.3|3.3.*
-    - zlib 1.2.11
-    - toolchain3
+    - {{ compiler('c') }}
+  host:
+    - gmp
+    - nettle
+    - zlib
     - libidn11
     - pkg-config  # [osx]
     - autoconf
-    - gettext
+    - gettext     # [osx]
     - automake
     - libtool
-
-  run:
-    - gmp 6.1.*
-    - nettle 3.3|3.3.*
-    - zlib 1.2.11
-    - libidn11
-    - gettext  # [osx]
 
 test:
   commands:
