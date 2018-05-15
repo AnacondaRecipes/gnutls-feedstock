@@ -1,5 +1,5 @@
 {% set name = "gnutls" %}
-{% set version = "3.5.17" %}
+{% set version = "3.5.18" %}
 {% set sha256 = "86b142afef587c118d63f72ccf307f3321dbc40357aae528202b65d913d20919" %}
 
 
@@ -30,11 +30,10 @@ requirements:
     - gmp 6.1.*
     - nettle 3.3|3.3.*
     - zlib 1.2.11
-    - toolchain3
     - libidn11
     - pkg-config  # [osx]
     - autoconf
-    - gettext
+    - gettext  # [osx]
     - automake
     - libtool
 
