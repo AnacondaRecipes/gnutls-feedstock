@@ -8,7 +8,7 @@ package:
 
 source:
   fn: {{ name }}-{{ version }}.tar.xz
-  url: ftp://ftp.gnutls.org/gcrypt/{{ name }}/v3.6/{{ name }}-{{ version }}.tar.xz
+  url: https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-{{ version }}.tar.xz
   sha256: {{ sha256 }}
   patches:
     # This patch fixes the pkgconfig test. It looks for the library
