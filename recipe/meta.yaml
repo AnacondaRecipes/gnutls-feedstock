@@ -1,6 +1,6 @@
 {% set name = "gnutls" %}
-{% set version = "3.6.5" %}
-{% set sha256 = "073eced3acef49a3883e69ffd5f0f0b5f46e2760ad86eddc6c0866df4e7abb35" %}
+{% set version = "3.6.15" %}
+{% set sha256 = "29271c6e5125b2637513a4c92ead4333827ba568b771b54b4454ae51f1bebbfc" %}
 
 package:
   name: {{ name|lower }}
