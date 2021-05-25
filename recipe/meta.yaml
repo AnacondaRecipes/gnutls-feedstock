@@ -1,6 +1,6 @@
 {% set name = "gnutls" %}
-{% set version = "3.6.15" %}
-{% set sha256 = "0ea8c3283de8d8335d7ae338ef27c53a916f15f382753b174c18b45ffd481558" %}
+{% set version = "3.6.16" %}
+{% set sha256 = "1b79b381ac283d8b054368b335c408fedcb9b7144e0c07f531e3537d4328f3b3" %}
 
 {% set version_major_minor = version.split(".")[:2] | join('.') %}
 
