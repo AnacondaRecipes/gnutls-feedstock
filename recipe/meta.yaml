@@ -36,7 +36,9 @@ requirements:
     - libtool
     - make
     - pkg-config
-  host:
+    - patch       # [not win]
+    - m2-patch    # [win]
+   host:
     - gettext >=0.19.8.1     # [osx]
     - gmp
     - nettle >=3.7
