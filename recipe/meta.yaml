@@ -15,6 +15,7 @@ source:
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
     # See https://gitlab.com/gnutls/gnutls/-/commit/f3e8eac0586a19f4dafd89f68006a536b826e65a?merge_request_iid=1866
     - revert-back-to-datefudge-for-openssl-ocsp.patch
+    - avoid-redirection-bashism-in-testsuite.patch  # [osx]
 
 build:
   number: 0
@@ -22,6 +23,8 @@ build:
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=gnutls
     - {{ pin_subpackage('gnutls', max_pin='x.x') }}
+  missing_dso_whitelist:  # [s390x]
+    - $RPATH/ld64.so.1    # [s390x]
 
 requirements:
   build:
