@@ -13,6 +13,8 @@ source:
   patches:
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
+    # See https://gitlab.com/gnutls/gnutls/-/commit/f3e8eac0586a19f4dafd89f68006a536b826e65a?merge_request_iid=1866
+    - revert-back-to-datefudge-for-openssl-ocsp.patch
 
 build:
   number: 0
