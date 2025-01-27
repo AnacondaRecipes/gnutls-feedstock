@@ -56,7 +56,6 @@ test:
     - gnutls-cli --version
     - ocsptool --version
     - psktool --version
-    - srptool --version
 
 about:
   home: https://www.gnutls.org/index.html
