@@ -1,5 +1,5 @@
 {% set name = "gnutls" %}
-{% set version = "3.8.8" %}
+{% set version = "3.8.7" %}
 
 {% set major_minor = ".".join(version.split(".")[:2]) %}
 
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://www.gnupg.org/ftp/gcrypt/gnutls/v{{ major_minor }}/gnutls-{{ version }}.tar.xz
-  sha256: ac4f020e583880b51380ed226e59033244bc536cad2623f2e26f5afa2939d8fb
+  sha256: fe302f2b6ad5a564bcb3678eb61616413ed5277aaf8e7bf7cdb9a95a18d9f477
   patches:
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
@@ -37,7 +37,8 @@ requirements:
   host:
     - gettext 0.21.0     # [osx]
     - gmp 6.3
-    - nettle 3.7.3
+    # nettle 3.7.3 isn't available on s390x and win-64
+    - nettle 3.7
     # Optional dependencies but keep them
     - libidn2 2
     - libtasn1 4.19
