@@ -70,7 +70,10 @@ about:
     to access the secure communications protocols as well as APIs
     to parse and write X.509, PKCS #12, and other required structures.
 
-The project strives to provide a secure communications back-end, simple to use and integrated with the rest of the base Linux libraries. A back-end designed to work and be secure out of the box, keeping the complexity of TLS and PKI out of application code.
+    The project strives to provide a secure communications back-end, simple to use
+    and integrated with the rest of the base Linux libraries.
+    A back-end designed to work and be secure out of the box,
+    keeping the complexity of TLS and PKI out of application code.
   doc_url: https://www.gnutls.org/documentation.html
   dev_url: https://gitlab.com/gnutls/gnutls/tree/master
 
