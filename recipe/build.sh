@@ -34,7 +34,7 @@ configure_opts+=(--without-included-libtasn1)
 configure_opts+=(--without-nettle-mini)
 configure_opts+=(--without-included-unistring)
 
-# Broken protocols that shouldn't be used in 2021
+# Broken protocols that shouldn't be used in 2021+
 configure_opts+=(--disable-ssl2-support)    # SSLv2 client hello
 configure_opts+=(--disable-ssl3-support)
 configure_opts+=(--disable-sha1-support)    # SHA1 cert signatures
@@ -67,7 +67,7 @@ configure_opts+=(--with-system-priority-file=$PREFIX/etc/gnutls/config)
 configure_opts+=(--with-unbound-root-key-file=$PREFIX/etc/unbound/root.key)
 
 ./configure --prefix="${PREFIX}"          \
-            ${configure_opts[@]}          \
+            "${configure_opts[@]}"          \
             || { exit 1; cat config.log; exit 1; }
 
 cat libtool | grep as-needed 2>&1 >/dev/null || \
