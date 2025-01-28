@@ -77,6 +77,13 @@ cat libtool | grep as-needed 2>&1 >/dev/null || \
 find tests -name 'Makefile' -exec sed -i.bak 's| -DNDEBUG||g' {} +
 
 make -j${CPU_COUNT} ${VERBOSE_AT}
-make -j${CPU_COUNT} -k check || \
+if [[ ${target_platform} =~ osx.* ]]; then
+    # The test 'gnutls-cli-debug' fails because the datefudge package is not available.
+    # Remove this after a new release
+    make -j${CPU_COUNT} -k check
+else
+    make -j${CPU_COUNT} -k check || \
     { find tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
+fi
+
 make install
