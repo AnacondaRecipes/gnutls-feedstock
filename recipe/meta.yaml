@@ -37,7 +37,7 @@ requirements:
     - m2-patch    # [win]
   host:
     - gettext 0.21.0     # [osx]
-    - gmp 6.3
+    - gmp {{ gmp }}
     # nettle 3.7.3 isn't available on s390x and win-64
     - nettle 3.7
     # Optional dependencies but keep them
