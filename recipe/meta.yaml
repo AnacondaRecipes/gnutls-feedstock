@@ -56,6 +56,7 @@ test:
     - test -f ${PREFIX}/lib/libgnutlsxx${SHLIB_EXT}  # [unix]
     - certtool --version
     - gnutls-cli --version
+    - gnutls-cli-debug --version
     - ocsptool --version
     - psktool --version
 

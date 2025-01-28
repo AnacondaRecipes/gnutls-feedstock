@@ -12,6 +12,12 @@ export CPPFLAGS="${CPPFLAGS//-DNDEBUG/}"
 #export CFLAGS="${CFLAGS//-DNDEBUG/}"
 #export CXXFLAGS="${CXXFLAGS//-DNDEBUG/}"
 
+if [[ ${target_platform} =~ osx.* ]]; then
+    # To avoid 'perl: warning: Setting locale failed'
+    export LC_CTYPE=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+fi
+
 # libtoolize deletes things we need from build-aux, automake puts them back
 libtoolize --copy --force --verbose
 automake --add-missing --copy --verbose
@@ -50,6 +56,8 @@ configure_opts+=(--without-p11-kit)     # support for smart cards, etc.
 
 # Don't run very slow components of test suite
 configure_opts+=(--disable-full-test-suite)
+# Don't run valgrind tests
+configure_opts+=(--disable-valgrind-tests)
 
 # Language bindings
 configure_opts+=(--enable-cxx)
@@ -77,10 +85,10 @@ cat libtool | grep as-needed 2>&1 >/dev/null || \
 find tests -name 'Makefile' -exec sed -i.bak 's| -DNDEBUG||g' {} +
 
 make -j${CPU_COUNT} ${VERBOSE_AT}
+
 if [[ ${target_platform} =~ osx.* ]]; then
-    # The test 'gnutls-cli-debug' fails because the datefudge package is not available.
-    # Remove this after a new release
-    make -j${CPU_COUNT} -k check
+    # The test 'gnutls-cli-debug' fails if timeout is not specified
+    make -j${CPU_COUNT} check gl_public_submodule_commit= TIMEOUT=gtimeout
 else
     make -j${CPU_COUNT} -k check || \
     { find tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
