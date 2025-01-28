@@ -13,7 +13,7 @@ export CPPFLAGS="${CPPFLAGS//-DNDEBUG/}"
 #export CXXFLAGS="${CXXFLAGS//-DNDEBUG/}"
 
 if [[ ${target_platform} =~ osx.* ]]; then
-    # To avoid 'perl: warning: Setting locale failed'
+    # To avoid 'perl: warning: Setting locale failed' before running libtoolize
     export LC_CTYPE=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
 fi
@@ -34,6 +34,10 @@ configure_opts+=(--enable-shared)
 configure_opts+=(--disable-static)
 configure_opts+=(--disable-doc)
 configure_opts+=(--disable-gtk-doc)
+if [[ ${target_platform} =~ osx.* ]]; then
+    # Don't use zlib on osx
+    configure_opts+=(--without-zlib)
+fi
 
 # Use the libraries we provide
 configure_opts+=(--without-included-libtasn1)
@@ -87,7 +91,7 @@ find tests -name 'Makefile' -exec sed -i.bak 's| -DNDEBUG||g' {} +
 make -j${CPU_COUNT} ${VERBOSE_AT}
 
 if [[ ${target_platform} =~ osx.* ]]; then
-    # The test 'gnutls-cli-debug' fails, see https://gitlab.com/gnutls/gnutls/-/issues/1539
+    # The test 'gnutls-cli-debug.sh' fails, see https://gitlab.com/gnutls/gnutls/-/issues/1539
     make -j${CPU_COUNT} check || true
 else
     make -j${CPU_COUNT} -k check || \
