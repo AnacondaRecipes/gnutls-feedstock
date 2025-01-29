@@ -12,6 +12,12 @@ export CPPFLAGS="${CPPFLAGS//-DNDEBUG/}"
 #export CFLAGS="${CFLAGS//-DNDEBUG/}"
 #export CXXFLAGS="${CXXFLAGS//-DNDEBUG/}"
 
+if [[ ${target_platform} =~ osx.* ]]; then
+    # To avoid 'perl: warning: Setting locale failed' before running libtoolize
+    export LC_CTYPE=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+fi
+
 # libtoolize deletes things we need from build-aux, automake puts them back
 libtoolize --copy --force --verbose
 automake --add-missing --copy --verbose
@@ -28,13 +34,17 @@ configure_opts+=(--enable-shared)
 configure_opts+=(--disable-static)
 configure_opts+=(--disable-doc)
 configure_opts+=(--disable-gtk-doc)
+if [[ ${target_platform} =~ osx.* ]]; then
+    # Don't use zlib on osx
+    configure_opts+=(--without-zlib)
+fi
 
 # Use the libraries we provide
 configure_opts+=(--without-included-libtasn1)
 configure_opts+=(--without-nettle-mini)
 configure_opts+=(--without-included-unistring)
 
-# Broken protocols that shouldn't be used in 2021
+# Broken protocols that shouldn't be used in 2021+
 configure_opts+=(--disable-ssl2-support)    # SSLv2 client hello
 configure_opts+=(--disable-ssl3-support)
 configure_opts+=(--disable-sha1-support)    # SHA1 cert signatures
@@ -50,6 +60,8 @@ configure_opts+=(--without-p11-kit)     # support for smart cards, etc.
 
 # Don't run very slow components of test suite
 configure_opts+=(--disable-full-test-suite)
+# Don't run valgrind tests
+configure_opts+=(--disable-valgrind-tests)
 
 # Language bindings
 configure_opts+=(--enable-cxx)
@@ -67,7 +79,7 @@ configure_opts+=(--with-system-priority-file=$PREFIX/etc/gnutls/config)
 configure_opts+=(--with-unbound-root-key-file=$PREFIX/etc/unbound/root.key)
 
 ./configure --prefix="${PREFIX}"          \
-            ${configure_opts[@]}          \
+            "${configure_opts[@]}"          \
             || { exit 1; cat config.log; exit 1; }
 
 cat libtool | grep as-needed 2>&1 >/dev/null || \
@@ -77,6 +89,13 @@ cat libtool | grep as-needed 2>&1 >/dev/null || \
 find tests -name 'Makefile' -exec sed -i.bak 's| -DNDEBUG||g' {} +
 
 make -j${CPU_COUNT} ${VERBOSE_AT}
-make -j${CPU_COUNT} -k check || \
+
+if [[ ${target_platform} =~ osx.* ]]; then
+    # The test 'gnutls-cli-debug.sh' fails, see https://gitlab.com/gnutls/gnutls/-/issues/1539
+    make -j${CPU_COUNT} check || true
+else
+    make -j${CPU_COUNT} -k check || \
     { find tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
+fi
+
 make install

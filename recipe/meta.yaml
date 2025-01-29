@@ -1,25 +1,20 @@
 {% set name = "gnutls" %}
-{% set version = "3.6.15" %}
-{% set sha256 = "0ea8c3283de8d8335d7ae338ef27c53a916f15f382753b174c18b45ffd481558" %}
+{% set version = "3.8.7" %}
 
-{% set version_major_minor = version.split(".")[:2] | join('.') %}
+{% set major_minor = ".".join(version.split(".")[:2]) %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.xz
-  url: https://www.gnupg.org/ftp/gcrypt/gnutls/v{{ version_major_minor }}/gnutls-{{ version }}.tar.xz
-  sha256: {{ sha256 }}
+  url: https://www.gnupg.org/ftp/gcrypt/gnutls/v{{ major_minor }}/gnutls-{{ version }}.tar.xz
+  sha256: fe302f2b6ad5a564bcb3678eb61616413ed5277aaf8e7bf7cdb9a95a18d9f477
   patches:
-    # This patch fixes the pkgconfig test. It looks for the library
-    # in the correct place (${PREFIX}/lib and ${PREFIX}/includes) and
-    # uses gcc to compile the generated temporary files.
-    #- 0002-pkgconfig.patch
-
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
+    # See https://gitlab.com/gnutls/gnutls/-/commit/f3e8eac0586a19f4dafd89f68006a536b826e65a?merge_request_iid=1866
+    - revert-back-to-datefudge-for-openssl-ocsp.patch
 
 build:
   number: 0
@@ -27,25 +22,29 @@ build:
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=gnutls
     - {{ pin_subpackage('gnutls', max_pin='x.x') }}
+  missing_dso_whitelist:  # [s390x]
+    - $RPATH/ld64.so.1    # [s390x]
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - automake 1.16.1
+    - automake
     - libtool
     - make
     - pkg-config
     - patch       # [not win]
     - m2-patch    # [win]
   host:
-    - gettext >=0.19.8.1     # [osx]
-    - gmp
-    - nettle >=3.7
-    - libidn2
-    - libtasn1
-    - libunistring
-    - ca-certificates
+    - gettext 0.21.0     # [osx]
+    - gmp {{ gmp }}
+    # nettle 3.7.3 isn't available on s390x and win-64
+    - nettle 3.7
+    # Optional dependencies but keep them
+    - libidn2 2
+    - libtasn1 4.19
+    - libunistring 0.9
+    - ca-certificates 2024.12.31
   run:
     - gettext >=0.19.8.1     # [osx]
     - ca-certificates
@@ -56,17 +55,27 @@ test:
     - test -f ${PREFIX}/lib/libgnutlsxx${SHLIB_EXT}  # [unix]
     - certtool --version
     - gnutls-cli --version
+    - gnutls-cli-debug --version
     - ocsptool --version
     - psktool --version
-    - srptool --version
 
 about:
-  home: http://www.gnutls.org/index.html
+  home: https://www.gnutls.org/index.html
   license: LGPL-2.1-or-later
   license_family: LGPL
   license_file: LICENSE
-  summary: 'GnuTLS is a secure communications library implementing the SSL, TLS and DTLS protocols'
-  doc_url: http://www.gnutls.org/documentation.html
+  summary: GnuTLS is a secure communications library implementing the SSL, TLS and DTLS protocols
+  description: |
+    GnuTLS is a secure communications library implementing the SSL, TLS and DTLS protocols
+    and technologies around them. It provides a simple C language application programming interface (API)
+    to access the secure communications protocols as well as APIs
+    to parse and write X.509, PKCS #12, and other required structures.
+
+    The project strives to provide a secure communications back-end, simple to use
+    and integrated with the rest of the base Linux libraries.
+    A back-end designed to work and be secure out of the box,
+    keeping the complexity of TLS and PKI out of application code.
+  doc_url: https://www.gnutls.org/documentation.html
   dev_url: https://gitlab.com/gnutls/gnutls/tree/master
 
 extra:
