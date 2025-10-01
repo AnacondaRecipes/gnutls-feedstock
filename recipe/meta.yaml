@@ -17,7 +17,7 @@ source:
     - revert-back-to-datefudge-for-openssl-ocsp.patch
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win]
   run_exports:
     # https://abi-laboratory.pro/?view=timeline&l=gnutls
@@ -36,7 +36,7 @@ requirements:
     - gettext 0.21.0     # [osx]
     - gmp {{ gmp }}
     # nettle 3.7.3 isn't available on s390x and win-64
-    - nettle 3.7
+    - nettle {{ nettle }}
     # Optional dependencies but keep them
     - libidn2 {{ libidn2 }}
     - libtasn1 4.19
