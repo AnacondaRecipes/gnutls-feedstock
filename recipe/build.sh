@@ -18,9 +18,10 @@ if [[ ${target_platform} =~ osx.* ]]; then
     export LC_ALL=en_US.UTF-8
 fi
 
-# libtoolize deletes things we need from build-aux, automake puts them back
-libtoolize --copy --force --verbose
-automake --add-missing --copy --verbose
+# Regenerate autotools files to match build environment versions
+# Skip gtkdocize since we disable gtk-doc in configure
+export GTKDOCIZE=true
+autoreconf -i --force --verbose
 
 declare -a configure_opts
 
