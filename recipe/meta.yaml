@@ -37,7 +37,7 @@ requirements:
     - nettle {{ nettle }}
     # Optional dependencies but keep them
     - libidn2 {{ libidn2 }}
-    - libtasn1 {{ libtasn1}}
+    - libtasn1 {{ libtasn1 }}
     - libunistring {{ libunistring }}
     - ca-certificates 2025.12.2
   run:
