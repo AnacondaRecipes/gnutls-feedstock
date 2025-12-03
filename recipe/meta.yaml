@@ -39,9 +39,11 @@ requirements:
     - libidn2 {{ libidn2 }}
     - libtasn1 {{ libtasn1 }}
     - libunistring {{ libunistring }}
+    - zlib {{ zlib }}          # [linux]
     - ca-certificates 2025.12.2
   run:
     - gettext >=0.19.8.1     # [osx]
+    - libzlib >=1.3          # [linux]
     - ca-certificates
 
 test:
