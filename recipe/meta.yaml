@@ -13,6 +13,8 @@ source:
   patches:
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
+    # Fix undefined reference to rpl_free in mini-dtls-fragments test
+    - 0004-tests-link-mini-dtls-fragments-with-libgnu.patch
 
 build:
   number: 0
