@@ -1,16 +1,14 @@
 #!/bin/bash
-set -x
+set -ex
 
 # Get an updated config.sub and config.guess
-cp $BUILD_PREFIX/share/libtool/build-aux/config.* ./build-aux
+cp "${BUILD_PREFIX}/share/libtool/build-aux/config."* ./build-aux/
 
 if [[ ${target_platform} =~ .*linux.* ]]; then
-    export LDFLAGS="$LDFLAGS -Wl,-rpath-link,${PREFIX}/lib"
+    export LDFLAGS="${LDFLAGS} -Wl,-rpath-link,${PREFIX}/lib"
 fi
 
 export CPPFLAGS="${CPPFLAGS//-DNDEBUG/}"
-#export CFLAGS="${CFLAGS//-DNDEBUG/}"
-#export CXXFLAGS="${CXXFLAGS//-DNDEBUG/}"
 
 if [[ ${target_platform} =~ osx.* ]]; then
     # To avoid 'perl: warning: Setting locale failed' before running libtoolize

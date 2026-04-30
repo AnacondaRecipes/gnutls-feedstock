@@ -1,5 +1,5 @@
 {% set name = "gnutls" %}
-{% set version = "3.8.12" %}
+{% set version = "3.8.13" %}
 
 {% set major_minor = ".".join(version.split(".")[:2]) %}
 
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://www.gnupg.org/ftp/gcrypt/{{ name }}/v{{ major_minor }}/{{ name }}-{{ version }}.tar.xz
-  sha256: a7b341421bfd459acf7a374ca4af3b9e06608dcd7bd792b2bf470bea012b8e51
+  sha256: ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e
   patches:
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
@@ -41,20 +41,25 @@ requirements:
     - zlib {{ zlib }}          # [linux]
     - ca-certificates 2025.12.2
   run:
-    # https://gitlab.com/gnutls/gnutls/-/blob/3.8.12/configure.ac?ref_type=tags#L412
+    # https://gitlab.com/gnutls/gnutls/-/blob/3.8.13/configure.ac?ref_type=tags#L412
     - gettext >=0.19.8.1     # [osx]
-    - zlib >=1.3          # [linux]
+    - zlib >=1.3             # [linux]
     - ca-certificates
 
 test:
+  requires:
+    - pkg-config           # [unix]
   commands:
-    - test -f ${PREFIX}/lib/libgnutls${SHLIB_EXT}    # [unix]
-    - test -f ${PREFIX}/lib/libgnutlsxx${SHLIB_EXT}  # [unix]
+    - test -f ${PREFIX}/lib/libgnutls${SHLIB_EXT}                # [unix]
+    - test -f ${PREFIX}/lib/libgnutlsxx${SHLIB_EXT}              # [unix]
+    - test -f ${PREFIX}/include/gnutls/gnutls.h                  # [unix]
+    - pkg-config --exists --print-errors 'gnutls >= {{ version }}'  # [unix]
     - certtool --version
     - gnutls-cli --version
     - gnutls-cli-debug --version
     - ocsptool --version
     - psktool --version
+    - gnutls-cli --list
 
 about:
   home: https://www.gnutls.org/index.html
