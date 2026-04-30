@@ -1,0 +1,22 @@
+tests/mini-dtls-fragments: link with libgnu.la
+
+Test fails to link on glibc with:
+
+    undefined reference to `rpl_free'
+
+CPPFLAGS pulls gnulib's stdlib.h (which rewrites free -> rpl_free),
+but LDADD doesn't include libgnu.la where rpl_free lives.
+Other tests with the same CPPFLAGS recipe (tls12-rollback-detection
+and friends) already do this.
+
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -524,6 +524,8 @@ mini_dtls_fragments_CPPFLAGS = $(AM_CPPFLAGS) \
+ 	-I$(top_srcdir)/gl	\
+ 	-I$(top_builddir)/gl
+ 
++mini_dtls_fragments_LDADD = $(LDADD) ../gl/libgnu.la
++
+ if ENABLE_PKCS11
+ if !WINDOWS
+ ctests += tls13/post-handshake-with-cert-pkcs11 pkcs11/tls-neg-pkcs11-no-key \
