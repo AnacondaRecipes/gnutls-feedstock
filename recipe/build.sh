@@ -39,8 +39,6 @@ if [[ ${target_platform} =~ osx.* ]]; then
 fi
 
 # Use the libraries we provide
-configure_opts+=(--without-included-libtasn1)
-configure_opts+=(--without-nettle-mini)
 configure_opts+=(--without-included-unistring)
 
 # Broken protocols that shouldn't be used in 2021+
