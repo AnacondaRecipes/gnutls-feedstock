@@ -1,5 +1,5 @@
 {% set name = "gnutls" %}
-{% set version = "3.8.13" %}
+{% set version = "3.8.14" %}
 
 {% set major_minor = ".".join(version.split(".")[:2]) %}
 
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://www.gnupg.org/ftp/gcrypt/{{ name }}/v{{ major_minor }}/{{ name }}-{{ version }}.tar.xz
-  sha256: ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e
+  sha256: 7e2d258071f5db9620aa7ff34259331d004f7beafa3eb18560cfaf60acfbf02a
   patches:
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
