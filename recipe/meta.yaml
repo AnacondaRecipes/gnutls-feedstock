@@ -1,14 +1,14 @@
 {% set name = "gnutls" %}
 {% set version = "3.8.14" %}
 
-{% set major_minor = ".".join(version.split(".")[:2]) %}
+#{% set major_minor = ".".join(version.split(".")[:2]) %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://www.gnupg.org/ftp/gcrypt/{{ name }}/v{{ major_minor }}/{{ name }}-{{ version }}.tar.xz
+  url: https://www.gnupg.org/ftp/gcrypt/{{ name }}/v{{ ".".join(version.split(".")[:2]) }}/{{ name }}-{{ version }}.tar.xz
   sha256: 7e2d258071f5db9620aa7ff34259331d004f7beafa3eb18560cfaf60acfbf02a
   patches:
     # https://gitlab.com/gnutls/gnutls/issues/660
@@ -41,9 +41,9 @@ requirements:
     - libtasn1 {{ libtasn1 }}
     - libunistring {{ libunistring }}
     - zlib {{ zlib }}          # [linux]
-    - ca-certificates 2025.12.2
+    - ca-certificates 2026.11.5
   run:
-    # https://gitlab.com/gnutls/gnutls/-/blob/3.8.13/configure.ac?ref_type=tags#L412
+    # https://gitlab.com/gnutls/gnutls/-/blob/3.8.14/configure.ac?ref_type=tags#L413
     - gettext >=0.19.8.1     # [osx]
     - zlib >=1.3             # [linux]
     - ca-certificates
