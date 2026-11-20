@@ -91,8 +91,10 @@ if [[ ${target_platform} =~ osx.* ]]; then
     # The test 'gnutls-cli-debug.sh' fails, see https://gitlab.com/gnutls/gnutls/-/issues/1539
     make -j${CPU_COUNT} check || true
 else
-    make -j${CPU_COUNT} -k check || \
-    { find tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
+    # mark test-thread-optim2 as an XFAIL because of a bug in the upstream's vendored gnulib. This bug
+    # causes pthread_create to not be found correctly, subsequently causing an assertion failure.
+    make -j${CPU_COUNT} -k check XFAIL_TESTS=test-thread-optim2 || \
+    { find tests src/gl/tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
 fi
 
 make install
