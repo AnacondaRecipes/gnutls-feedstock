@@ -87,11 +87,23 @@ find tests -name 'Makefile' -exec sed -i.bak 's| -DNDEBUG||g' {} +
 
 make -j${CPU_COUNT} ${VERBOSE_AT}
 
+declare -a check_opts
+if [[ ${target_platform} =~ .*linux.* ]]; then
+    # The conda gcc activation script adds -fno-plt (ctng-compiler-activation-feedstock,
+    # FINAL_CFLAGS_linux_*). On the glibc 2.28 sysroot there is no <sys/single_threaded.h>,
+    # so gnulib's thread-optim.c falls back to scanning the PLT (DT_JMPREL) for
+    # pthread_create. With -fno-plt the call is a GOT (GLOB_DAT) reference instead,
+    # which it never sees, so test-thread-optim2 fails. Build the check programs
+    # without -fno-plt. Only the test programs are rebuilt; the installed libraries
+    # were already compiled by `make` above with the default flags.
+    check_opts+=(CFLAGS="${CFLAGS//-fno-plt/}")
+fi
+
 if [[ ${target_platform} =~ osx.* ]]; then
     # The test 'gnutls-cli-debug.sh' fails, see https://gitlab.com/gnutls/gnutls/-/issues/1539
     make -j${CPU_COUNT} check || true
 else
-    make -j${CPU_COUNT} -k check || \
+    make -j${CPU_COUNT} -k check "${check_opts[@]}" || \
     { find tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
 fi
 
