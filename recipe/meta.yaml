@@ -1,8 +1,6 @@
 {% set name = "gnutls" %}
 {% set version = "3.8.14" %}
 
-#{% set major_minor = ".".join(version.split(".")[:2]) %}
-
 package:
   name: {{ name|lower }}
   version: {{ version }}
@@ -14,7 +12,7 @@ source:
     # https://gitlab.com/gnutls/gnutls/issues/660
     - 0003-Fix-libcrypto-test-it-must-always-fail.patch
     # Fix undefined reference to rpl_free in mini-dtls-fragments test
-    - 0004-tests-link-mini-dtls-fragments-with-libgnu.patch
+    #- 0004-tests-link-mini-dtls-fragments-with-libgnu.patch
 
 build:
   number: 0
