@@ -104,7 +104,8 @@ if [[ ${target_platform} =~ osx.* ]]; then
     make -j${CPU_COUNT} check || true
 else
     make -j${CPU_COUNT} -k check "${check_opts[@]}" || \
-    { find tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; exit 1; }
+    { find tests src/gl/tests -name 'test-*.log' -exec egrep -A5 '^FAIL: ' {} +; \
+    cat src/gl/tests/test-thread-optim2.log; exit 1; }
 fi
 
 make install
